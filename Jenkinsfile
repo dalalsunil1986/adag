@@ -3,9 +3,7 @@ def serviceaccount = "cicd-jenkins"
 podTemplate(label: label, serviceAccount: serviceaccount,
 containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnabled: true, command: 'cat',
                              volumes: [secretVolume(secretName: 'kube-config', mountPath: '/root/.kube')]),
-			containerTemplate(name: 'clair-scanner', image: 'cplee/clair-scanner', ttyEnabled: true, command: 'cat', ports: [portMapping(name: 'clair-scanner', containerPort: '9279')],
-					         volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]),
-            containerTemplate(name: 'docker', image: 'docker:19.03', ttyEnabled: true, command: 'cat')],
+		            containerTemplate(name: 'docker', image: 'docker:19.03', ttyEnabled: true, command: 'cat')],
                              volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
 ) {
 
@@ -26,25 +24,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
 			   sh("docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} --network=host .")
 			}
 		}
-			stage('Create jenkinslave service') {
-				container('kubectl') {
-				echo 'Deploying....'
-            
-            sh """
-			echo ${label}
-			cat ${WORKSPACE}/clair-scanner.yaml | sed "s/{{parm}}/${label}/g" | kubectl apply -f -
-			"""
 			
-			
-			}
-        }
-
-            stage ('Docker image scan') {
-		      container('clair-scanner') {		
-		      sh ("clair-scanner -w 'mywhitelist.yaml' -c 'http://clair:6060' --ip='${label}' -t 'High' ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
-		      		
-		       }
-            } 
         stage('Push Container Image') {
 			container('docker'){
 				withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
