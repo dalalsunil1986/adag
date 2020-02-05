@@ -42,7 +42,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
                     }
                 }
                 catch(e){
-                    sh("kubectl run ${K8S_DEPLOYMENT_NAME} --image=${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:latest --replicas=2 -n default")
+                    sh("kubectl run ${K8S_DEPLOYMENT_NAME} --image=${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} --replicas=2 -n default")
                     echo "deploying"
                 }
                 sh ("kubectl get pods -n default")
