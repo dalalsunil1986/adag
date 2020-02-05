@@ -36,7 +36,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
         stage('Deploy build to Kubernetes') {
             container('kubectl') {
                 try{
-                    sh("kubectl get deployment/django-st -n default")
+                    sh("kubectl get deployment/${K8S_DEPLOYMENT_NAME} -n default")
                     if(true){
                         sh ("kubectl set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -n default")
                     }
