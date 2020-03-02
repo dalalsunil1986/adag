@@ -13,7 +13,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
 		def GIT_BRANCH='master'
 		def DOCKER_HUB_ACCOUNT = '$dockerhub_id'
         def DOCKER_IMAGE_NAME = 'django-app'
-        def K8S_DEPLOYMENT_NAME = 'django-app'
+        def K8S_DEPLOYMENT_NAME = 'django'
 		
         stage('Clone Repo'){
 			git branch: GIT_BRANCH, url: GIT_URL, credentialsId: GIT_CREDENTIAL_ID
@@ -42,7 +42,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
                     }
                 }
                 catch(e){
-                    sh("kubectl run ${K8S_DEPLOYMENT_NAME} --image=${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} --replicas=2 -n default")
+                    sh("kubectl apply -f deployment.yaml -n default")
                     echo "deploying"
                 }
                 sh ("kubectl get pods -n default")
