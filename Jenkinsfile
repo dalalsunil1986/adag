@@ -11,7 +11,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
         def GIT_URL= 'https://github.com/khozema-nullwala/adag.git'
 		def GIT_CREDENTIAL_ID ='scm'
 		def GIT_BRANCH='master'
-		def DOCKER_HUB_ACCOUNT = '$dockerhub-userid'
+		def DOCKER_HUB_ACCOUNT = '$dockerhub_id'
         def DOCKER_IMAGE_NAME = 'django-app'
         def K8S_DEPLOYMENT_NAME = 'django-app'
 		
