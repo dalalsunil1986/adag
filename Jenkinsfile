@@ -42,7 +42,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
                     }
                 }
                 catch(e){
-                    sh("kubectl apply -f deployment.yaml -n default")
+                    sh("kubectl apply -f deployment.yaml -n default --validate=false")
                     echo "deploying"
                 }
                 sh ("kubectl get pods -n default")
