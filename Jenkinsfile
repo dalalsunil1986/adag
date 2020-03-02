@@ -8,12 +8,12 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
 ) {
 
     node(label) {
-        def GIT_URL= 'https://github.com/somatiwari2005/adv_devops.git'
+        def GIT_URL= ''
 		def GIT_CREDENTIAL_ID ='scm'
 		def GIT_BRANCH='master'
-		def DOCKER_HUB_ACCOUNT = '11480778'
-        def DOCKER_IMAGE_NAME = 'sample-image'
-        def K8S_DEPLOYMENT_NAME = 'sample-app'
+		def DOCKER_HUB_ACCOUNT = '$dockerhub-userid'
+        def DOCKER_IMAGE_NAME = 'django-app'
+        def K8S_DEPLOYMENT_NAME = 'django-app'
 		
         stage('Clone Repo'){
 			git branch: GIT_BRANCH, url: GIT_URL, credentialsId: GIT_CREDENTIAL_ID
@@ -27,7 +27,7 @@ containers: [containerTemplate(name: 'kubectl', image: 'smesch/kubectl', ttyEnab
 			
         stage('Push Container Image') {
 			container('docker'){
-				withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+				withDockerRegistry([ credentialsId: "docker-credentials", url: "" ]) {
 				   sh("docker push ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
 				}
 			}
